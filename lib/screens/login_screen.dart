@@ -100,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const Icon(Icons.anchor, size: 64, color: Color(0xFF1E3A8A)),
                         const SizedBox(height: 16),
                         const Text(
-                          "StudyHive Login",
+                          "FishersNet Login",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 26,
