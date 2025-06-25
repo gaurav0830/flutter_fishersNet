@@ -90,17 +90,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: BoxDecoration(
                     color: const Color(0xFF1E3A8A).withOpacity(0.35),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xFF1E3A8A), width: 1.5),
+                    border:
+                        Border.all(color: const Color(0xFF1E3A8A), width: 1.5),
                   ),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Icon(Icons.anchor, size: 64, color: Color(0xFF1E3A8A)),
+                        const Icon(Icons.anchor,
+                            size: 64, color: Color(0xFF1E3A8A)),
                         const SizedBox(height: 16),
                         const Text(
-                          "FishersNet Login",
+                          "Fisher's Net",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 26,
@@ -112,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFormField(
                           controller: _emailController,
                           validator: (value) =>
-                          value!.isEmpty ? 'Email is required' : null,
+                              value!.isEmpty ? 'Email is required' : null,
                           decoration: InputDecoration(
                             labelText: "Email",
                             prefixIcon: const Icon(Icons.email),
@@ -128,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: _passwordController,
                           obscureText: _obscurePassword,
                           validator: (value) =>
-                          value!.isEmpty ? 'Password is required' : null,
+                              value!.isEmpty ? 'Password is required' : null,
                           decoration: InputDecoration(
                             labelText: "Password",
                             prefixIcon: const Icon(Icons.lock),
@@ -162,25 +164,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 24),
                         _isLoading
                             ? const Center(
-                          child: CircularProgressIndicator(
-                              color: Color(0xFF1E3A8A)),
-                        )
+                                child: CircularProgressIndicator(
+                                    color: Color(0xFF1E3A8A)),
+                              )
                             : ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF1E3A8A),
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          onPressed: _login,
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.white),
-                          ),
-                        ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF1E3A8A),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: _login,
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                ),
+                              ),
                         const SizedBox(height: 16),
                         MouseRegion(
                           onEnter: (_) => setState(() => _isHovering = true),

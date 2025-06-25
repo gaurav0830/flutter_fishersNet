@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../screens/login.dart';
+import '../../screens/login_screen.dart';
 
 class FisherDashboard extends StatelessWidget {
   const FisherDashboard({super.key});
@@ -41,7 +41,7 @@ class FisherDashboard extends StatelessWidget {
       await prefs.setBool('isLoggedIn', false);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
     }
   }

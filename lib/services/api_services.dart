@@ -130,4 +130,23 @@ class ApiService {
     final responseBody = await response.stream.bytesToString();
     return jsonDecode(responseBody);
   }
+  Future<Map<String, dynamic>> updateRescueStatus(int rescueId, String status) async {
+    final response = await http.put(
+      Uri.parse('${ApiConstant.baseUrl}${ApiConstant.updateRescueStatus}'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'rescue_id': rescueId,
+        'status': status,
+      }),
+    );
+    return jsonDecode(response.body);
+  }
+
+  Future<Map<String, dynamic>> getRescueDetails(int rescueId) async {
+    final response = await http.get(
+      Uri.parse('${ApiConstant.baseUrl}${ApiConstant.viewRescue}/$rescueId'),
+      headers: {'Content-Type': 'application/json'},
+    );
+    return jsonDecode(response.body);
+  }
 }

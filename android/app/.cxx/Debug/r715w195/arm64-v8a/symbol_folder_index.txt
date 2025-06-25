@@ -1,0 +1,1 @@
+C:\Users\DELL\StudioProjects\flutter_fishersNet\build\app\intermediates\cxx\Debug\r715w195\obj\arm64-v8a
