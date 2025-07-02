@@ -11,7 +11,7 @@ class ApiService {
     required String password,
   }) async {
     final response = await http.post(
-      Uri.parse('${ApiConstant.baseUrl}${ApiConstant.register}'),
+      Uri.parse(ApiConstant.register),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'name': name,
@@ -28,8 +28,12 @@ class ApiService {
     required String email,
     required String password,
   }) async {
+    final url = '${ApiConstant.baseServerUrl}${ApiConstant.login}';
+    print('Login API URL: $url');
+    print('Sending Email: $email, Password: $password');
+
     final response = await http.post(
-      Uri.parse('${ApiConstant.baseUrl}${ApiConstant.login}'),
+      Uri.parse(ApiConstant.login),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'email': email,
@@ -37,12 +41,17 @@ class ApiService {
       }),
     );
 
+
+    print('Response Status: ${response.statusCode}');
+    print('Response Body: ${response.body}');
+
     return jsonDecode(response.body);
   }
 
+
   Future<Map<String, dynamic>> viewMagazines() async {
     final response = await http.get(
-      Uri.parse('${ApiConstant.baseUrl}${ApiConstant.viewMagazine}'),
+      Uri.parse(ApiConstant.viewMagazine),
       headers: {'Content-Type': 'application/json'},
     );
 
@@ -51,28 +60,30 @@ class ApiService {
 
   Future<Map<String, dynamic>> viewRescues() async {
     final response = await http.get(
-      Uri.parse('${ApiConstant.baseUrl}${ApiConstant.viewRescue}'),
+      Uri.parse(ApiConstant.viewRescue),
       headers: {'Content-Type': 'application/json'},
     );
-
     return jsonDecode(response.body);
   }
+
 
   Future<Map<String, dynamic>> viewFish() async {
     final response = await http.get(
-      Uri.parse('${ApiConstant.baseUrl}${ApiConstant.viewFish}'),
+      Uri.parse(ApiConstant.viewFish),
       headers: {'Content-Type': 'application/json'},
     );
-
+    print('Fish Response: ${response.body}');
     return jsonDecode(response.body);
   }
+
+
 
   Future<Map<String, dynamic>> addFeedback({
     int? userId,
     required String message,
   }) async {
     final response = await http.post(
-      Uri.parse('${ApiConstant.baseUrl}${ApiConstant.addFeedback}'),
+      Uri.parse(ApiConstant.addFeedback),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'user_id': userId,
@@ -89,7 +100,7 @@ class ApiService {
     required int quantity,
   }) async {
     final response = await http.post(
-      Uri.parse('${ApiConstant.baseUrl}${ApiConstant.bookFish}'),
+      Uri.parse(ApiConstant.bookFish),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'user_id': userId,
@@ -107,7 +118,7 @@ class ApiService {
   }) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('${ApiConstant.baseUrl}${ApiConstant.uploadFishImage}'),
+      Uri.parse(ApiConstant.uploadFishImage),
     );
     request.fields['fish_id'] = fishId.toString();
     request.files.add(await http.MultipartFile.fromPath('image', image.path));
@@ -122,7 +133,7 @@ class ApiService {
   }) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('${ApiConstant.baseUrl}${ApiConstant.uploadMagazineImage}'),
+      Uri.parse(ApiConstant.uploadMagazineImage),
     );
     request.fields['magazine_id'] = magazineId.toString();
     request.files.add(await http.MultipartFile.fromPath('image', image.path));
@@ -130,4 +141,32 @@ class ApiService {
     final responseBody = await response.stream.bytesToString();
     return jsonDecode(responseBody);
   }
+
+  Future<Map<String, dynamic>> viewOrders() async {
+    final response = await http.get(
+      Uri.parse(ApiConstant.viewOrders),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    return jsonDecode(response.body);
+  }
+
+  Future<Map<String, dynamic>> getFeedbacks({required int? userId}) async {
+    print('Fetching feedbacks for user_id: $userId'); // Check this
+
+    if (userId == null) {
+      return {'status': 'error', 'message': 'User ID is required'};
+    }
+
+    final response = await http.get(
+      Uri.parse('${ApiConstant.viewFeedback}?user_id=$userId'),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    print('Feedback Response: ${response.body}');
+    return jsonDecode(response.body);
+  }
+
+
+
 }

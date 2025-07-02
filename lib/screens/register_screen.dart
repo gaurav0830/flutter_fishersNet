@@ -58,16 +58,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E3A8A).withOpacity(0.35),
+                color: const Color(0xFF3674B5).withOpacity(0.35),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0xFF1E3A8A), width: 1.5),
+                border: Border.all(color: const Color(0xFF3674B5), width: 1.5),
               ),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Icon(Icons.person_add, size: 64, color: Color(0xFF1E3A8A)),
+                    const Icon(Icons.person_add, size: 64, color: Color(0xFF3674B5)),
                     const SizedBox(height: 16),
                     const Text(
                       "Register New Account",
@@ -75,13 +75,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       style: TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E3A8A),
+                        color: Color(0xFF3674B5),
                       ),
                     ),
                     const SizedBox(height: 32),
                     TextFormField(
                       controller: _nameController,
-                      validator: (value) => value!.isEmpty ? 'Name is required' : null,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Name is required';
+                        } else if (value.trim().length < 3) {
+                          return 'Name must be at least 3 characters';
+                        }
+                        return null;
+                      },
                       decoration: InputDecoration(
                         labelText: "Name",
                         prefixIcon: const Icon(Icons.person),
@@ -95,7 +102,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _emailController,
-                      validator: (value) => value!.isEmpty ? 'Email is required' : null,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Email is required';
+                        }
+                        final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                        if (!emailRegex.hasMatch(value.trim())) {
+                          return 'Enter a valid email';
+                        }
+                        return null;
+                      },
                       decoration: InputDecoration(
                         labelText: "Email",
                         prefixIcon: const Icon(Icons.email),
@@ -109,6 +125,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _phoneController,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) return null;
+                        final phoneRegex = RegExp(r'^[0-9]{10,15}$');
+                        if (!phoneRegex.hasMatch(value.trim())) {
+                          return 'Enter a valid phone number';
+                        }
+                        return null;
+                      },
                       decoration: InputDecoration(
                         labelText: "Phone (Optional)",
                         prefixIcon: const Icon(Icons.phone),
@@ -123,7 +147,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextFormField(
                       controller: _passwordController,
                       obscureText: true,
-                      validator: (value) => value!.isEmpty ? 'Password is required' : null,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Password is required';
+                        } else if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
                       decoration: InputDecoration(
                         labelText: "Password",
                         prefixIcon: const Icon(Icons.lock),
@@ -145,12 +176,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     _isLoading
                         ? const Center(
                       child: CircularProgressIndicator(
-                        color: Color(0xFF1E3A8A),
+                        color: Color(0xFF3674B5),
                       ),
                     )
                         : ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1E3A8A),
+                        backgroundColor: const Color(0xFF3674B5),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -167,7 +198,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
                       child: const Text(
                         'Already have an account? Login',
-                        style: TextStyle(color: Color(0xFF1E3A8A)),
+                        style: TextStyle(color: Color(0xFF3674B5)),
                       ),
                     ),
                   ],

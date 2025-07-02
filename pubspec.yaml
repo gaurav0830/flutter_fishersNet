@@ -46,10 +46,17 @@ dependencies:
   carousel_slider: ^5.1.1
   animated_bottom_navigation_bar: ^1.4.0
   animations: ^2.0.11
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo_fisher.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -72,7 +79,7 @@ flutter:
     - assets/blogs.jpg
     - assets/feedback.jpeg
     - assets/profile.jpg
-
+    - assets/top-image.jpeg
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

@@ -79,51 +79,62 @@ class _BookFishScreenState extends State<BookFishScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF1E3A8A), Color(0xFFADD8E6)],
+            colors: [Color(0xFF3674B5), Color(0xFF578FCA)],
           ),
         ),
         child: _isLoading
-            ? Center(
+            ? const Center(
           child: CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
           ),
         )
             : SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(24.0),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FadeInDown(
-                    duration: Duration(milliseconds: 800),
-                    child: Text(
-                      'Book Fish',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    duration: const Duration(milliseconds: 800),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'Book Fish',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   FadeInLeft(
-                    duration: Duration(milliseconds: 1000),
+                    duration: const Duration(milliseconds: 1000),
                     child: DropdownButtonFormField<dynamic>(
                       value: _selectedFish,
-                      hint: Text('Select Fish', style: TextStyle(color: Colors.black54)),
+                      hint: const Text('Select Fish', style: TextStyle(color: Colors.black54)),
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white.withOpacity(0.9),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        prefixIcon: Icon(Icons.set_meal, color: Color(0xFF1E88E5)),
+                        prefixIcon: const Icon(Icons.set_meal, color: Color(0xFF1E88E5)),
                       ),
                       items: _fishList.map((fish) {
                         return DropdownMenuItem(
@@ -136,10 +147,11 @@ class _BookFishScreenState extends State<BookFishScreen> {
                                 width: 40,
                                 height: 40,
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                                errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.error),
                               )
-                                  : Icon(Icons.image, size: 40, color: Color(0xFF1E88E5)),
-                              SizedBox(width: 8),
+                                  : const Icon(Icons.image, size: 40, color: Color(0xFF1E88E5)),
+                              const SizedBox(width: 8),
                               Text(fish['name']),
                             ],
                           ),
@@ -153,40 +165,38 @@ class _BookFishScreenState extends State<BookFishScreen> {
                       validator: (value) => value == null ? 'Please select a fish' : null,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   FadeInLeft(
-                    duration: Duration(milliseconds: 1200),
+                    duration: const Duration(milliseconds: 1200),
                     child: TextFormField(
                       controller: _quantityController,
                       decoration: InputDecoration(
                         labelText: 'Quantity',
                         filled: true,
                         fillColor: Colors.white.withOpacity(0.9),
-                        prefixIcon: Icon(Icons.format_list_numbered, color: Color(0xFF1E88E5)),
+                        prefixIcon:
+                        const Icon(Icons.format_list_numbered, color: Color(0xFF1E88E5)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       keyboardType: TextInputType.number,
-                      validator: (value) => value!.isEmpty ? 'Quantity is required' : null,
+                      validator: (value) =>
+                      value!.isEmpty ? 'Quantity is required' : null,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   if (_errorMessage != null)
                     FadeInUp(
-                      duration: Duration(milliseconds: 1400),
+                      duration: const Duration(milliseconds: 1400),
                       child: Text(
                         _errorMessage!,
                         style: TextStyle(color: Colors.red.shade100),
                       ),
                     ),
-                  SizedBox(height: 24),
-                  _isLoading
-                      ? CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  )
-                      : FadeInUp(
-                    duration: Duration(milliseconds: 1600),
+                  const SizedBox(height: 24),
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 1600),
                     child: ElevatedButton(
                       onPressed: _bookFish,
                       style: ElevatedButton.styleFrom(
@@ -195,16 +205,17 @@ class _BookFishScreenState extends State<BookFishScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
                           side: const BorderSide(
-                            color: Color(0xFF1E3A8A), // Border color
-                            width: 1.5,               // Border thickness
+                            color: Color(0xFF1E3A8A),
+                            width: 1.5,
                           ),
                         ),
                       ),
-                      child: Text('Book Fish',
-                          style: TextStyle(
-                          color: Color(0xFF1E3A8A), // Text color
-                      fontWeight: FontWeight.bold,
-                    ),
+                      child: const Text(
+                        'Book Fish',
+                        style: TextStyle(
+                          color: Color(0xFF1E3A8A),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

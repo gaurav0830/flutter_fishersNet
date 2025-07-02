@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_services.dart';
-import 'package:animate_do/animate_do.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ViewFishScreen extends StatefulWidget {
   @override
@@ -41,129 +41,116 @@ class _ViewFishScreenState extends State<ViewFishScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF1E3A8A), Color(0xFF1E3A8A)],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              FadeInDown(
-                duration: Duration(milliseconds: 800),
-                child: Text(
-                  'Fishes',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+      backgroundColor: const Color(0xFFF5F7FA),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator(color: Color(0xFF3674B5)))
+          : _errorMessage != null
+          ? Center(child: Text(_errorMessage!))
+          : CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 120,
+            backgroundColor: Color(0xFF3674B5),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+            ),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/home');
+              },
+            ),
+            flexibleSpace: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                // Calculate shrink percentage
+                double percent = (constraints.maxHeight - kToolbarHeight) / (120 - kToolbarHeight);
+                double fontSize = 16 + (10 * percent); // Font ranges from 16 to 26
+
+                return FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text(
+                    'Fishes',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: fontSize.clamp(16, 26),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ),
-              Expanded(
-                child: _isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                    : _errorMessage != null
-                        ? Center(
-                            child: Text(
-                              _errorMessage!,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        : RefreshIndicator(
-                            onRefresh: _fetchFish,
-                            child: ListView.builder(
-                              padding: EdgeInsets.all(16),
-                              itemCount: _fishList.length,
-                              itemBuilder: (context, index) {
-                                final fish = _fishList[index];
-                                return FadeInUp(
-                                  duration: Duration(milliseconds: 300 * (index + 1)),
-                                  child: Card(
-                                    margin: EdgeInsets.only(bottom: 16),
-                                    elevation: 4,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                            Colors.white,
-                                            Colors.white.withOpacity(0.9),
-                                          ],
-                                        ),
-                                      ),
-                                      child: ListTile(
-                                        contentPadding: EdgeInsets.all(16),
-                                        leading: fish['image_url'] != null
-                                            ? ClipRRect(
-                                                borderRadius: BorderRadius.circular(8),
-                                                child: Image.network(
-                                                  fish['image_url'],
-                                                  width: 60,
-                                                  height: 60,
-                                                  fit: BoxFit.cover,
-                                                  errorBuilder: (context, error, stackTrace) =>
-                                                      Icon(Icons.image, size: 40, color: Color(0xFF1E88E5)),
-                                                ),
-                                              )
-                                            : Icon(Icons.image, size: 40, color: Color(0xFF1E88E5)),
-                                        title: Text(
-                                          fish['name'] ?? 'Unknown Fish',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        subtitle: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(height: 4),
-                                            Text(
-                                              'Price: ₹${fish['price']?.toString() ?? 'N/A'}',
-                                              style: TextStyle(
-                                                color: Color(0xFF1E88E5),
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            SizedBox(height: 4),
-                                            Text(
-                                              'Available: ${fish['available_quantity']?.toString() ?? '0'}',
-                                              style: TextStyle(
-                                                color: Colors.grey[600],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        trailing: Icon(
-                                          Icons.chevron_right,
-                                          color: Color(0xFF1E88E5),
-                                        ),
-                                        onTap: () {
-                                          // Handle fish selection
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-              ),
-            ],
+                );
+              },
+            ),
           ),
-        ),
+
+          SliverPadding(
+            padding: EdgeInsets.all(16),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  final fish = _fishList[index];
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.all(16),
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: fish['image_url'] != null
+                            ? Image.network(
+                          fish['image_url'],
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Icon(Icons.image, size: 40, color: Color(0xFF1E88E5)),
+                        )
+                            : Icon(Icons.image, size: 40, color: Color(0xFF1E88E5)),
+                      ),
+                      title: Text(
+                        fish['name'] ?? 'Unknown Fish',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 4),
+                          Text(
+                            '₹${fish['price'] ?? 'N/A'}',
+                            style: TextStyle(color: Color(0xFF3674B5), fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            'Available: ${fish['available_quantity'] ?? '0'}',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                      trailing: Icon(Icons.chevron_right, color: Color(0xFF1E88E5)),
+                      onTap: () {
+                        // Handle tap
+                      },
+                    ),
+                  );
+                },
+                childCount: _fishList.length,
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: 80), // Bottom space to avoid overlapping with FAB or navbar
+          ),
+
+        ],
       ),
     );
   }

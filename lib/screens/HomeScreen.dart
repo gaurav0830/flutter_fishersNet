@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-// import 'package:app/screens/UserProfile.dart';
+import 'package:app/screens/UserProfile.dart';
 import 'package:app/screens/view_magazine_screen.dart';
-import 'package:app/screens/add_feedback_screen.dart';
 import 'package:app/services/user_service.dart';
-import 'package:app/screens/dashboard_view.dart'; // Dashboard that links to other screens
-// import 'package:app/screens/view_rescue_screen.dart';
-// import 'package:app/screens/book_fish_screen.dart';
+import 'package:app/screens/dashboard_view.dart';
 import 'package:app/screens/view_fish_screen.dart';
+import 'book_fish_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,32 +16,26 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
+  List<Widget> _screens = [];
 
-  late List<Widget> _screens;
-
-  @override
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _precacheImages());
-
-    // Defer async logic outside initState
     _loadUserIdAndSetScreens();
   }
 
   Future<void> _loadUserIdAndSetScreens() async {
     final userId = await UserService.getUserId() ?? 0;
-
     setState(() {
       _screens = [
-        const DashboardView(), // Static Home screen
+        DashboardView(onProfileTap: () => _onItemTapped(3)),
         ViewFishScreen(),
         ViewMagazineScreen(),
-        AddFeedbackScreen(userId: userId),
+        UserProfileScreen(),
       ];
     });
   }
-
 
   void _precacheImages() {
     final images = [
@@ -52,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
       'assets/catch_fish.jpg',
       'assets/available_fish.jpg',
       'assets/blogs.jpg',
-      'assets/feedback.jpeg',
       'assets/profile.jpg',
     ];
     for (var path in images) {
@@ -67,67 +58,68 @@ class _HomeScreenState extends State<HomeScreen> {
     _pageController.jumpToPage(index);
   }
 
-  final List<BottomNavigationBarItem> _navItems = const [
-    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-    BottomNavigationBarItem(icon: Icon(Icons.set_meal), label: 'Fishes'),
-    BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'Magazine'),
-    BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Feedback'),
-  ];
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: Colors.white,
       extendBody: true,
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A8A),
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        titleSpacing: 16,
-        title: Row(
-          children: const [
-            Icon(Icons.anchor, size: 28, color: Colors.white),
-            SizedBox(width: 8),
-            Text(
-              "FishersNet",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: GestureDetector(
-              // onTap: () => _onItemTapped(3),
-              child: const CircleAvatar(
-                backgroundImage: AssetImage("assets/profile.jpg"),
-                backgroundColor: Colors.transparent,
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: PageView(
+      body: _screens.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
         children: _screens,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: _navItems,
-        selectedItemColor: Color(0xFF1E3A8A),
-        unselectedItemColor: Colors.grey,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        showUnselectedLabels: true,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => BookFishScreen(userId: 0)),
+          );
+        },
+        backgroundColor: const Color(0xFF3674B5),
+        child: const Icon(Icons.add, color: Colors.white),
+        shape: const CircleBorder(),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 6,
+        color: Colors.white,
+        elevation: 10,
+        child: SizedBox(
+          height: 50,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                icon: Icon(Icons.home,
+                    size: 24,
+                    color: _selectedIndex == 0 ? const Color(0xFF3674B5) : Colors.grey),
+                onPressed: () => _onItemTapped(0),
+              ),
+              IconButton(
+                icon: Icon(Icons.set_meal,
+                    size: 24,
+                    color: _selectedIndex == 1 ? const Color(0xFF3674B5) : Colors.grey),
+                onPressed: () => _onItemTapped(1),
+              ),
+              const SizedBox(width: 48), // Space for FAB
+              IconButton(
+                icon: Icon(Icons.menu_book,
+                    size: 24,
+                    color: _selectedIndex == 2 ? const Color(0xFF3674B5) : Colors.grey),
+                onPressed: () => _onItemTapped(2),
+              ),
+              IconButton(
+                icon: Icon(Icons.person,
+                    size: 24,
+                    color: _selectedIndex == 3 ? const Color(0xFF3674B5) : Colors.grey),
+                onPressed: () => _onItemTapped(3),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

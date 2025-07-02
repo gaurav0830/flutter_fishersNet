@@ -53,20 +53,25 @@ class _ViewRescueScreenState extends State<ViewRescueScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Rescue Reports',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
-        backgroundColor: const Color(0xFF1E3A8A),
+        title: const Text(
+          'Rescue Reports',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: const Color(0xFF3674B5),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF1E3A8A), Color(0xFF1976D2)],
+            colors: [Color(0xFF3674B5), Color(0xFF578FCA)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
         child: _isLoading
-            ? const Center(child: CircularProgressIndicator(color: Colors.white))
+            ? const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        )
             : _errorMessage != null
             ? Center(
           child: Text(

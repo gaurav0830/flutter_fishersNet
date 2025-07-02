@@ -40,11 +40,21 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response['status'] == 'success') {
         final user = response['user'];
         await UserService.saveUserData(
-          userId: user['user_id'],
+          userId: user['id'],
           name: user['name'],
           email: user['email'],
+          role: user['role'],
         );
-        Navigator.pushReplacementNamed(context, '/home');
+
+        if (user['role'] == 'fisher') {
+          Navigator.pushReplacementNamed(
+            context,
+            '/fisherHome',
+            arguments: {'fisherId': user['id']},
+          );
+        } else {
+          Navigator.pushReplacementNamed(context, '/home');
+        }
       } else {
         setState(() {
           _errorMessage = response['message'];
@@ -66,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SvgPicture.asset(
               'assets/blob.svg',
               width: 500,
-              color: const Color(0xFF1E3A8A).withOpacity(0.2),
+              color: const Color(0xFF3674B5).withOpacity(0.2),
             ),
           ),
           Positioned(
@@ -75,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SvgPicture.asset(
               'assets/blob.svg',
               width: 500,
-              color: const Color(0xFF1E3A8A).withOpacity(0.15),
+              color: const Color(0xFF3674B5).withOpacity(0.15),
             ),
           ),
 
@@ -88,16 +98,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1E3A8A).withOpacity(0.35),
+                    color: const Color(0xFF3674B5).withOpacity(0.35),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xFF1E3A8A), width: 1.5),
+                    border:
+                        Border.all(color: const Color(0xFF3674B5), width: 1.5),
                   ),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Icon(Icons.anchor, size: 64, color: Color(0xFF1E3A8A)),
+                        const Icon(Icons.anchor,
+                            size: 64, color: Color(0xFF3674B5)),
                         const SizedBox(height: 16),
                         const Text(
                           "FishersNet Login",
@@ -105,14 +117,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E3A8A),
+                            color: Color(0xFF3674B5),
                           ),
                         ),
                         const SizedBox(height: 32),
                         TextFormField(
                           controller: _emailController,
-                          validator: (value) =>
-                          value!.isEmpty ? 'Email is required' : null,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Email is required';
+                            }
+                            final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                            if (!emailRegex.hasMatch(value.trim())) {
+                              return 'Enter a valid email';
+                            }
+                            return null;
+                          },
                           decoration: InputDecoration(
                             labelText: "Email",
                             prefixIcon: const Icon(Icons.email),
@@ -127,8 +147,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFormField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
-                          validator: (value) =>
-                          value!.isEmpty ? 'Password is required' : null,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Password is required';
+                            } else if (value.length < 6) {
+                              return 'Password must be at least 6 characters';
+                            }
+                            return null;
+                          },
                           decoration: InputDecoration(
                             labelText: "Password",
                             prefixIcon: const Icon(Icons.lock),
@@ -162,25 +188,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 24),
                         _isLoading
                             ? const Center(
-                          child: CircularProgressIndicator(
-                              color: Color(0xFF1E3A8A)),
-                        )
+                                child: CircularProgressIndicator(
+                                    color: Color(0xFF3674B5)),
+                              )
                             : ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF1E3A8A),
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          onPressed: _login,
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.white),
-                          ),
-                        ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF3674B5),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: _login,
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                ),
+                              ),
                         const SizedBox(height: 16),
                         MouseRegion(
                           onEnter: (_) => setState(() => _isHovering = true),
@@ -194,14 +220,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               text: TextSpan(
                                 text: "Don't have an account? ",
                                 style: const TextStyle(
-                                  color: Color(0xFF1E3A8A),
+                                  color: Color(0xFF3674B5),
                                   fontSize: 14,
                                 ),
                                 children: [
                                   TextSpan(
                                     text: 'Register',
                                     style: TextStyle(
-                                      color: const Color(0xFF1E3A8A),
+                                      color: const Color(0xFF3674B5),
                                       fontWeight: FontWeight.bold,
                                       decoration: _isHovering
                                           ? TextDecoration.underline

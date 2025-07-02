@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/UserProfileService.dart';
-// import 'ChangePassword.dart';
+import 'package:app/screens/ChangePassword.dart'; // Import your change password form
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -44,7 +44,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
       setState(() {
         profile = user;
         _nameController.text = user?['name'] ?? '';
-        _contactController.text = user?['contact'] ?? '';
+        _contactController.text = user?['phone'] ?? '';
         isLoading = false;
         _animController.forward();
       });
@@ -78,25 +78,25 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
 
-  // void _openChangePasswordModal(BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Dialog(
-  //         backgroundColor: Colors.white,
-  //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-  //         child: SizedBox(
-  //           height: 500,
-  //           width: double.infinity,
-  //           child: Padding(
-  //             padding: const EdgeInsets.all(16.0),
-  //             child: ChangePasswordForm(),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  void _openChangePasswordModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: SizedBox(
+            height: 500,
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ChangePasswordForm(),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   void dispose() {
@@ -110,7 +110,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Profile", style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: const Color(0xFF3674B5),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text("My Profile", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -145,14 +147,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
               child: Column(
                 children: [
                   SizedBox(
-                    width: 80, // increase this as needed (default is 40)
+                    width: 80,
                     height: 80,
-                    child: const CircleAvatar(
+                    child: CircleAvatar(
                       backgroundImage: AssetImage("assets/profile.jpg"),
                       backgroundColor: Colors.transparent,
                     ),
                   ),
-
                   SizedBox(height: 10),
                   Text(
                     "User Info",
@@ -188,7 +189,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
                 icon: const Icon(Icons.save),
                 label: const Text("Update Profile", style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1E3A8A),
+                  backgroundColor: const Color(0xFF3674B5),
                   iconColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -223,20 +224,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
               ),
             ),
             const SizedBox(height: 20),
-            // SizedBox(
-            //   width: double.infinity,
-            //   child: ElevatedButton.icon(
-            //     onPressed: () => _openChangePasswordModal(context),
-            //     icon: const Icon(Icons.password),
-            //     label: const Text("Change Password", style: TextStyle(color: Colors.white)),
-            //     style: ElevatedButton.styleFrom(
-            //       backgroundColor: Colors.green,
-            //       iconColor: Colors.white,
-            //       padding: const EdgeInsets.symmetric(vertical: 14),
-            //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            //     ),
-            //   ),
-            // ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => _openChangePasswordModal(context),
+                icon: const Icon(Icons.password),
+                label: const Text("Change Password", style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  iconColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+            ),
             const SizedBox(height: 30),
           ],
         ),
@@ -261,7 +262,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
             ),
           ),
         ),
-        const SizedBox(height: 60),
+        const SizedBox(height: 100),
       ],
     );
   }

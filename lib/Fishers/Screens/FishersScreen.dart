@@ -1,11 +1,17 @@
+import 'package:app/Fishers/Screens/View_order.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../screens/login.dart';
+import 'package:app/screens/login_screen.dart';
+import 'package:app/Fishers/Screens/manage_fish.dart';
 
 class FisherDashboard extends StatelessWidget {
-  const FisherDashboard({super.key});
+  final int fisherId;
+
+  const FisherDashboard({super.key, required this.fisherId});
 
   Future<void> _handleLogout(BuildContext context) async {
+    print('Logout button pressed');
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -18,7 +24,10 @@ class FisherDashboard extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
-              onPressed: () => Navigator.of(context).pop(false),
+              onPressed: () {
+                print('Logout cancelled');
+                Navigator.of(context).pop(false);
+              },
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -29,7 +38,10 @@ class FisherDashboard extends StatelessWidget {
                 ),
               ),
               child: const Text('Logout'),
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: () {
+                print('Logout confirmed');
+                Navigator.of(context).pop(true);
+              },
             ),
           ],
         );
@@ -37,11 +49,12 @@ class FisherDashboard extends StatelessWidget {
     );
 
     if (confirmed == true) {
+      print('Clearing SharedPreferences and navigating to LoginScreen');
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', false);
+      await prefs.clear();
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
     }
   }
@@ -49,12 +62,8 @@ class FisherDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> fisherOptions = [
-      {'title': 'Post Available Fish', 'icon': Icons.add_box},
+      {'title': 'Manage Fish', 'icon': Icons.add_box},
       {'title': 'View Orders', 'icon': Icons.list_alt},
-      {'title': 'Send SOS Alert', 'icon': Icons.emergency_share},
-      {'title': 'Rescue Updates', 'icon': Icons.report},
-      {'title': 'My Profile', 'icon': Icons.person},
-      {'title': 'Blogs / Tips', 'icon': Icons.article},
     ];
 
     return Scaffold(
@@ -105,10 +114,10 @@ class FisherDashboard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 40),
-              const Center(
+              Center(
                 child: Text(
-                  "Welcome Fisher!",
-                  style: TextStyle(
+                  "Welcome Fisher! ",
+                  style: const TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -129,7 +138,24 @@ class FisherDashboard extends StatelessWidget {
                       children: fisherOptions.map((item) {
                         return InkWell(
                           onTap: () {
-                            // TODO: Add navigation for each option
+                            print('Tapped on ${item['title']}');
+                            if (item['title'] == 'Manage Fish') {
+                              print('Navigating to ManageFishScreen with fisherId: $fisherId');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ManageFishScreen(fisherId: fisherId),
+                                ),
+                              );
+                            } else if (item['title'] == 'View Orders') {
+                              print('Navigating to ViewOrdersScreen with fisherId: $fisherId');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ViewOrdersScreen(fisherId: fisherId),
+                                ),
+                              );
+                            }
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -146,8 +172,7 @@ class FisherDashboard extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(item['icon'],
-                                    size: 40, color: Color(0xFF1E3A8A)),
+                                Icon(item['icon'], size: 40, color: Color(0xFF1E3A8A)),
                                 const SizedBox(height: 12),
                                 Text(
                                   item['title'],
