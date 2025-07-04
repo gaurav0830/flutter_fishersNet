@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  static const String baseUrl = 'http://192.168.89.28/fishing1/fishing_app1/api'; // Update to your actual API
+  static const String baseUrl = 'http://10.125.76.95/fishing1/fishing_app1/api'; // Update to your actual API
 
   static Future<Map<String, dynamic>> changePassword({
     required String oldPassword,

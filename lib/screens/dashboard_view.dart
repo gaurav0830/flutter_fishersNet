@@ -2,45 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:app/screens/book_fish_screen.dart';
 import 'package:app/screens/view_rescue_screen.dart';
 import 'package:app/screens/view_magazine_screen.dart';
-import 'package:app/services/user_service.dart';
 import 'package:app/screens/add_feedback_screen.dart';
 import 'package:app/screens/UserProfile.dart';
 
-class DashboardView extends StatefulWidget {
+class DashboardView extends StatelessWidget {
   final VoidCallback? onProfileTap;
+  final int userId;
 
-  const DashboardView({Key? key, this.onProfileTap}) : super(key: key);
-  @override
-  State<DashboardView> createState() => _DashboardViewState();
-}
-
-class _DashboardViewState extends State<DashboardView> {
-  int? userId;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserId();
-  }
-
-  void _loadUserId() async {
-    final id = await UserService.getUserId();
-    setState(() {
-      userId = id;
-    });
-  }
+  const DashboardView({Key? key, this.onProfileTap, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (userId == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
     final List<Map<String, dynamic>> gridItems = [
       {
         'title': 'Book a Fish',
         'image': 'assets/catch_fish.jpg',
-        'widget': BookFishScreen(userId: userId!),
+        'widget': BookFishScreen(userId: userId),
       },
       {
         'title': 'Rescue Info',
@@ -62,22 +39,17 @@ class _DashboardViewState extends State<DashboardView> {
     return Scaffold(
       body: Stack(
         children: [
-
           // Top Image
           Column(
             children: [
               Stack(
                 children: [
-
-                  // Background Image
                   Image.asset(
                     'assets/top-image.jpeg',
                     height: 240,
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
-
-                  // Overlay content: Title & Profile
                   Positioned(
                     top: 50,
                     left: 16,
@@ -90,24 +62,21 @@ class _DashboardViewState extends State<DashboardView> {
                       ),
                     ),
                   ),
-
                   Positioned(
                     top: 50,
                     right: 16,
                     child: GestureDetector(
                       onTap: () {
-                        if (widget.onProfileTap != null) {
-                          widget.onProfileTap!();
+                        if (onProfileTap != null) {
+                          onProfileTap!();
                         }
                       },
-
                       child: const CircleAvatar(
                         backgroundImage: AssetImage("assets/profile.jpg"),
                         backgroundColor: Colors.white,
                       ),
                     ),
                   ),
-
                 ],
               ),
             ],
@@ -117,11 +86,7 @@ class _DashboardViewState extends State<DashboardView> {
           SingleChildScrollView(
             child: Column(
               children: [
-
-                // Spacer for image height minus overlap
                 const SizedBox(height: 210),
-
-                // White Card Overlapping Image
                 Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
@@ -138,8 +103,6 @@ class _DashboardViewState extends State<DashboardView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
-                      // Search Bar
                       Material(
                         elevation: 4,
                         borderRadius: BorderRadius.circular(12),
@@ -163,17 +126,12 @@ class _DashboardViewState extends State<DashboardView> {
                           ),
                         ),
                       ),
-
-
                       const SizedBox(height: 44),
-
                       const Text(
                         "Explore",
                         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
                       ),
-
                       const SizedBox(height: 16),
-
                       Column(
                         children: gridItems.map((item) {
                           return InkWell(
@@ -214,7 +172,7 @@ class _DashboardViewState extends State<DashboardView> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                                            color: Colors.black.withOpacity(0.3), // Tint over the image
+                                            color: Colors.black.withOpacity(0.3),
                                           ),
                                         ),
                                       ),
@@ -273,6 +231,5 @@ class _DashboardViewState extends State<DashboardView> {
         ],
       ),
     );
-
   }
 }

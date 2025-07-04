@@ -1,6 +1,6 @@
 class ApiConstant {
   // Update with your server IP
-  static const String baseServerUrl = 'http://192.168.89.28/fishing1/fishing_app1';
+  static const String baseServerUrl = 'http://10.125.76.95/fishing1/fishing_app1';
 
   static const String apiBase = '$baseServerUrl/api';
   static const String imageBase = '$baseServerUrl';

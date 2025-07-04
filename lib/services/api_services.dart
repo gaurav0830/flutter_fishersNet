@@ -108,7 +108,7 @@ class ApiService {
         'quantity': quantity,
       }),
     );
-
+    print('Book Fish: ${response.body}');
     return jsonDecode(response.body);
   }
 
@@ -147,7 +147,7 @@ class ApiService {
       Uri.parse(ApiConstant.viewOrders),
       headers: {'Content-Type': 'application/json'},
     );
-
+    print('View Orders: ${response.body}');
     return jsonDecode(response.body);
   }
 

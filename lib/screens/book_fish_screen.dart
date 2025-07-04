@@ -51,6 +51,13 @@ class _BookFishScreenState extends State<BookFishScreen> {
         _errorMessage = null;
       });
 
+      print('DEBUG: Booking fish...');
+      print('User ID: ${widget.userId}');
+      print('Selected Fish: $_selectedFish');
+      print('Fish ID: ${_selectedFish?['fish_id']}');
+      print('Quantity Text: ${_quantityController.text}');
+      print('Parsed Quantity: ${int.tryParse(_quantityController.text)}');
+
       final response = await _apiService.bookFish(
         userId: widget.userId,
         fishId: _selectedFish['fish_id'],
